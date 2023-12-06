@@ -10,7 +10,7 @@ BIN_NAME = aboba
 all : clang build
 
 clean :
-	-@rm $(BIN_NAME)
+	rm -f $(BIN_NAME)
 
 test : clean
 	$(CC) $(FLAGS) -g main.c -o $(BIN_NAME) # -s
