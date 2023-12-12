@@ -40,6 +40,8 @@ int get_last(Node_t* head);
 int get_index(Node_t* head, unsigned int value);
 // Получение значения по индексу.
 int get_value(Node_t* head, unsigned int index);
+// Получить длину списка.
+int get_length(Node_t* head);
 
 // ================================
 //   === Смена значения элемента ====

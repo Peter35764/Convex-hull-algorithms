@@ -17,7 +17,6 @@ Node_t *list_init(unsigned int value, unsigned int flag) {
       append(&head, i);
     }
   }
-
   return head;
 }
 
@@ -71,7 +70,6 @@ int get_last(Node_t *head) {
   while (head->next != NULL) {
     head = head->next;
   }
-
   return head->value;
 }
 
@@ -83,7 +81,6 @@ int get_index(Node_t *head, unsigned int value) {
     }
     head = head->next;
   }
-
   return head->value;
 }
 
@@ -98,6 +95,15 @@ int get_value(Node_t *head, unsigned int index) {
               head          i
               head->next    i+1        */
   return head->value;
+}
+
+int get_length(Node_t *head) {
+  int ans = 0;
+  while (head != NULL) {
+    ans++;
+    head = head->next;
+  }
+  return ans;
 }
 
 void change_value(Node_t *head, unsigned int index, unsigned int value) {
@@ -142,7 +148,6 @@ int remove_index(Node_t **head, unsigned int index) {
     ans = tmp->value;
     free(tmp);
   }
-
   return ans;
 }
 
@@ -181,6 +186,5 @@ int remove_last(Node_t *head) {
     free(head->next);
     head->next = NULL;
   }
-
   return ans;
 }
