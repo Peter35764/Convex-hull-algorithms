@@ -3,14 +3,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
-#include <unistd.h>
 
-// Размеры квадрата первой четверти плоскости, в котором могут быть точки.
-#define FIELD_SIZE 10  // Object-like Macros
-// Количество сгенерированных точек.
-#define POINT_AMOUNT 4
+#include "linked_list.h"
 
 // Функции "стека".
 #define push(stack_ptr, element) (*((stack_ptr)++) = (element))
@@ -34,13 +29,15 @@ typedef struct Point {
 // вектором ab.
 int rotate(Point_t* a, const Point_t* b, const Point_t* c);
 // Вывести координаты точки в stdout.
-void printPoint(Point_t p);
+int printPoint(Point_t p);
 //
 void printStack(Point_t* ptr, const int length, const char* name);
 //
 void printArray(Point_t** ptr, const int length, const char* name);
 // Инициализация (выделение памяти) для массива точек.
 Point_t** arr_init(int length);
+//
+int arr_findPoint(Point_t** arr, Point_t point, int length);
 // Освобождение памяти из под массива точек.
 void arr_free(Point_t** ptr, int length);
 // Функция-обертка rotate() для qsort.
@@ -48,8 +45,11 @@ void arr_free(Point_t** ptr, int length);
 int Point_compare(const void* p1, const void* p2);
 // Алгоритм Грэхема.
 // Использутся глобальная переменная Point lower_left.
-Point_t* graham_scan(Point_t** arr, const int length);
+Point_t* graham_algorithm(Point_t** arr, const int length);
 //
-Point_t* jarvis_scan(Point_t** arr, const int length);
+Point_t* jarvis_algorithm(Point_t** arr, const int length);
+
+Point_t* chen_algorithm(Point_t** arr, const int length);
+
 
 #endif

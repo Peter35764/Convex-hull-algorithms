@@ -13,7 +13,7 @@ Node_t *list_init(unsigned int value, unsigned int flag) {
     head->next = NULL;
   } else {
     head->value = 0;
-    for (int i = 1; i < value; i++) {
+    for (unsigned int i = 1; i < value; i++) {
       append(&head, i);
     }
   }
@@ -53,13 +53,14 @@ void list_free(Node_t *head) {
 }
 
 void printList(Node_t *head, const char *name) {
-  printf("\n=== %s ===\n", name);
+  printf("\n=== List %s ===\n", name);
   if (head == NULL) {
     printf(" ```empty```\n");
   } else {
+    int index = 0;
     Node_t *current = head;
     while (current != NULL) {
-      printf("%d\n", current->value);
+      printf("%i: %d\n", index++, current->value);
       current = current->next;
     }
   }
@@ -85,7 +86,7 @@ int get_index(Node_t *head, unsigned int value) {
 }
 
 int get_value(Node_t *head, unsigned int index) {
-  for (int i = 0; i < index; i++) {
+  for (unsigned int i = 0; i < index; i++) {
     if (head->next == NULL) {
       fprintf(stderr, "ERROR in get_value()\n");
       exit(1);
@@ -107,7 +108,7 @@ int get_length(Node_t *head) {
 }
 
 void change_value(Node_t *head, unsigned int index, unsigned int value) {
-  for (int i = 0; i < index; i++) {
+  for (unsigned int i = 0; i < index; i++) {
     if (head->next == NULL) {
       fprintf(stderr, "ERROR in change_value()\n");
       exit(1);
@@ -134,7 +135,7 @@ int remove_index(Node_t **head, unsigned int index) {
   } else {
     Node_t *tmp = *head, *tmp2;
 
-    for (int i = 0; i < index; i++) {
+    for (unsigned int i = 0; i < index; i++) {
       if (tmp->next == NULL) {
         fprintf(stderr, "ERROR in remove_index()\n");
         exit(1);

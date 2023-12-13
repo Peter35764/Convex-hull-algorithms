@@ -1,27 +1,28 @@
-CC = gcc
+CC = gcc # clang
 FLAGS = -Wall -Werror -Wextra -std=c11
-FSANITIZER = #-fsanitize=address
+FSANITIZER = -fsanitize=address -fsanitize=undefined # -fsanitize=memory нужно сменить компилятор на clang
 DEBUGGER_FLAGS = -ggdb -O0
-CHECK = 2>&1 valgrind --tool=memcheck --leak-check=full --track-origins=yes #--leak-check=yes --show-leak-kinds=all
-BIN_NAME = aboba
+CHECK = 2>&1 valgrind --tool=memcheck --leak-check=full --track-origins=yes --show-leak-kinds=all #--leak-check=yes
+SOURCE_FILES = main.c linked_list.c
+
+BIN_NAME := conv-hull
 .DEFAULT_GOAL := test
 
-.PHONY: all clean test rebuild build clang clang_n
+.PHONY: all clean rebuild test clang clang_n
 
-all : clang build
+all : 
+	$(CC) $(FLAGS) $(SOURCE_FILES) -o $(BIN_NAME)
 
 clean :
-	rm -f $(BIN_NAME) vgcore.*
-
-test : clean
-	$(CC) $(DEBUGGER_FLAGS) $(FSANITIZER) main.c linked_list.c -o $(BIN_NAME) # -s
-	#$(CHECK) ./$(BIN_NAME) # read_from_file
-	./$(BIN_NAME)
+	rm -f $(BIN_NAME)* vgcore.*
 
 rebuild : clean all
 
-build :
-	$(CC) $(FLAGS) main.c linked_list.c -o $(BIN_NAME)
+test : clean
+	$(CC) $(DEBUGGER_FLAGS) $(SOURCE_FILES) -o $(BIN_NAME)_debug
+	$(CHECK) ./$(BIN_NAME)_debug
+	$(CC) $(DEBUGGER_FLAGS) $(FSANITIZER) $(SOURCE_FILES) -o $(BIN_NAME)_fsanitize 
+	./$(BIN_NAME)_fsanitize
 
 clang:
 	clang-format -style=Google -i *.[ch]

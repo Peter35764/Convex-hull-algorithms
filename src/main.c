@@ -7,8 +7,15 @@
 // Алгоритм Грэхема.
 // Рекурсивный алгоритм.
 
+// Размеры квадрата первой четверти плоскости, в котором могут быть точки.
+// (Object-like Macros)
+#define FIELD_SIZE 10
+// Количество сгенерированных точек.
+#define POINT_AMOUNT 10
+
 Point_t lower_left = {FIELD_SIZE + 1, FIELD_SIZE + 1, -1};
 
+int main(void) {
 /*
   Point_t* stack = graham_scan(array, Point_t_AMOUNT);
   printArray(array, Point_t_AMOUNT, "after");
@@ -16,7 +23,6 @@ Point_t lower_left = {FIELD_SIZE + 1, FIELD_SIZE + 1, -1};
   arr_free(array, Point_t_AMOUNT);
 */
 
-int main() {
   srand(time(NULL));
 
   Point_t** array = arr_init(POINT_AMOUNT);
@@ -30,18 +36,18 @@ int main() {
   // array[3]->x = 2;
   // array[3]->y = 2;
 
-  array[0]->x = 6;
-  array[0]->y = 0;
-  array[1]->x = 6;
-  array[1]->y = 2;
-  array[2]->x = 0;
-  array[2]->y = 1;
-  array[3]->x = 8;
-  array[3]->y = 0;
+  // array[0]->x = 6;
+  // array[0]->y = 0;
+  // array[1]->x = 6;
+  // array[1]->y = 2;
+  // array[2]->x = 0;
+  // array[2]->y = 1;
+  // array[3]->x = 8;
+  // array[3]->y = 0;
 
   printArray(array, POINT_AMOUNT, "before");
 
-  Point_t* curve_arr = jarvis_scan(array, POINT_AMOUNT);
+  Point_t* curve_arr = jarvis_algorithm(array, POINT_AMOUNT);
 
   printStack(curve_arr, POINT_AMOUNT, "after");
 
@@ -58,24 +64,38 @@ int rotate(Point_t* a, const Point_t* b, const Point_t* c) {
   return (ab_x) * (bc_y) - (ab_y) * (bc_x);
 }
 
-void printPoint(Point_t p) {
-  printf("i: %d  x: %d  y: %d\n", p.index, p.x, p.y);
+int printPoint(Point_t p) {
+  int status = 0;
+  if (!(p.index == p.x && p.x == p.y && p.y == p.index && p.index == -1)) {
+    printf("i: %d  x: %d  y: %d\n", p.index, p.x, p.y);
+    status++;
+  }
+  return status;
 }
 
 void printStack(Point_t* ptr, const int length, const char* name) {
-  printf("\n=== %s, length: %d ===\n", name, length);
+  int real_length = 0;
+
+  printf("\n=== Stack %s ===\n", name);
   for (int i = 0; i < length; i++) {
-    printPoint(ptr[i]);
+    real_length += printPoint(ptr[i]);
   }
-  printf("============\n");
+  printf("=== length: %i ===\n", real_length);
 }
 
 void printArray(Point_t** ptr, const int length, const char* name) {
-  printf("\n=== %s, length: %d ===\n", name, length);
+  int real_length = 0;
+
+  printf("\n=== Array %s ===\n", name);
   for (int i = 0; i < length; i++) {
-    printPoint(*ptr[i]);
+    real_length += printPoint(*ptr[i]);
   }
-  printf("============\n");
+  printf("=== length: %i ===\n", length);
+  if (real_length != length) {
+    printf("declared length: %i\n", length);
+    printf("real length: %i\n", real_length);
+    printf("===============\n");
+  }
 }
 
 Point_t** arr_init(int length) {
@@ -84,28 +104,36 @@ Point_t** arr_init(int length) {
     perror("ERROR in arr_init()");
     exit(1);
   }
-  int index = 0;
+
   for (int i = 0; i < length; i++) {
     ptr[i] = malloc(sizeof(Point_t));
     if (!ptr[i]) {
       perror("ERROR in arr_init()");
       exit(1);
     }
-    // Добавить проверку того, что такой точки еще нет
 
-    int x_ = rand() % (FIELD_SIZE + 1);
-    int y_ = rand() % (FIELD_SIZE + 1);
+    Point_t tmp = {rand() % (FIELD_SIZE + 1), rand() % (FIELD_SIZE + 1), -121};
+    if (arr_findPoint(ptr, tmp, i)) {
+      Point_t tmp __attribute__((unused)) = {rand() % (FIELD_SIZE + 1),
+                                             rand() % (FIELD_SIZE + 1), -121};
+    }
 
-    ptr[i]->x = x_;
-    ptr[i]->y = y_;
-    ptr[i]->index = index++;
-
-    // ptr[i]->x = i;
-    // ptr[i]->y = i;
-    // ptr[i]->index = i;
+    ptr[i]->x = tmp.x;
+    ptr[i]->y = tmp.y;
+    ptr[i]->index = i;
   }
-
   return ptr;
+}
+
+int arr_findPoint(Point_t** arr, Point_t point, int length) {
+  int find = 0;
+  for (int i = 0; i < length; i++) {
+    if (arr[i]->x == point.x && arr[i]->y == point.y) {
+      find = 1;
+      break;
+    }
+  }
+  return find;
 }
 
 void arr_free(Point_t** ptr, int length) {
@@ -126,7 +154,7 @@ int Point_t_compare(const void* p1, const void* p2) {
   return ans;
 }
 
-Point_t* graham_scan(Point_t** arr, const int length) {
+Point_t* graham_algorithm(Point_t** arr, const int length) {
   /* В статье написано, что надо использовать косвенную адресацию в виде
   отдельного массива, но такой подход требует написания собственной сортировки.
   Попробуем без этого. int index[length]; for (int i = 0; i < length; i++) {
@@ -179,13 +207,14 @@ Point_t* graham_scan(Point_t** arr, const int length) {
   return curve_arr;
 }
 
-Point_t* jarvis_scan(Point_t** arr, const int length) {
+Point_t* jarvis_algorithm(Point_t** arr, const int length) {
+  
   // Этап 1. Найти самую левую нижнюю точку.
 
-  // index (P) - номера точек, их позиция в arr
+  // index - номера точек, их позиция в arr
   Node_t* index = list_init(POINT_AMOUNT, 1);
-  // curve (H) - вершины оболочки
-  Node_t* curve = list_init(0, 0);
+  // curve - вершины оболочки
+  Node_t* curve = list_init(1000000, 0);
 
   for (int i = 0; i < length; i++) {
     if (arr[i]->x < lower_left.x) {
@@ -204,34 +233,10 @@ Point_t* jarvis_scan(Point_t** arr, const int length) {
 
   // Этап 2.
 
-  // index (P) - номера точек, их позиция в arr
-  // curve (H) - вершины оболочки
-  // H = [P[0]]
-  // del P[0]
-  // P.append(H[0])
-
   change_value(curve, 0, remove_first(&index));
   append(&index, get_value(curve, 0));
 
-  // printList(curve, "curve");
-  // printList(index, "index");
-
-  // while True:
-  //   right = 0
-  //   for i in range(1,len(P)):
-  //     if rotate(A[H[-1]],A[P[right]],A[P[i]])<0:
-  //       right = i
-  //   if P[right]==H[0]:
-  //     break
-  //   else:
-  //     H.append(P[right])
-  //     del P[right]
-  // return H
-  // index (P) - номера точек, их позиция в arr
-  // curve (H) - вершины оболочки
-
   while (1) {
-    // sleep(3);
     int right = 0;
     for (int i = 1; i < get_length(index); i++) {
       if (rotate(arr[get_last(curve)], arr[get_value(index, right)],
@@ -239,18 +244,13 @@ Point_t* jarvis_scan(Point_t** arr, const int length) {
         right = i;
       }
     }
-    if (index[right].value == curve[0].value) {
-      printf("    !!!break!!!    \n");  ////////////////
+    if (get_value(index, right) == get_value(curve, 0)) {
       break;
     } else {
-      append(&curve, index[right].value);
+      append(&curve, get_value(index, right));
       remove_index(&index, right);
     }
-    printList(curve, "curve in while");  ////////////////////////
-    printList(index, "index in while");  ////////////////////////
   }
-
-  // Удобный вывод оболочки.
 
   Point_t* curve_arr = calloc(POINT_AMOUNT, sizeof(Point_t));
   if (!curve_arr) {
@@ -259,12 +259,17 @@ Point_t* jarvis_scan(Point_t** arr, const int length) {
   }
   Point_t* stack_ptr = curve_arr;
 
-  for (int i = 0; i < POINT_AMOUNT; i++) {
-    push(stack_ptr, *arr[curve[i].value]);
+  int curve_length = get_length(curve);
+  Point_t zaglushka = {-1, -1, -1};
+
+  for (int i = 0; i < curve_length; i++) {
+    push(stack_ptr, *arr[remove_first(&curve)]);  // curve frees here !
+  }
+  for (int i = curve_length; i < POINT_AMOUNT; i++) {
+    push(stack_ptr, zaglushka);
   }
 
   list_free(index);
-  list_free(curve);
 
   return curve_arr;
 }
