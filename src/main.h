@@ -7,7 +7,7 @@
 
 #include "linked_list.h"
 
-// Функции "стека".
+// Универсальные макросы "стека" для массива точек (Point_t** или Point_t*).
 #define push(stack_ptr, element) (*((stack_ptr)++) = (element))
 #define pop(stack_ptr) (--(stack_ptr))  // (*(stack_ptr)--)
 // Generic для определения типа подаваемой переменной.
@@ -22,34 +22,46 @@ typedef struct Point {
   int x, y, index;
 } Point_t;
 
-// Вычисление z-компоненты векторного произведения векторов ab и bc.
-// Если возвращаемое значение > 0, то точка с находится слева от вектора ab.
-// Если возвращаемое значение < 0, то точка с находится справа от вектора ab.
-// Если возвращаемое значение = 0, то точка с находится на одной линии с
-// вектором ab.
-int rotate(Point_t* a, const Point_t* b, const Point_t* c);
+// Инициализация (выделение памяти) для массива точек.
+Point_t** arr_init(int length);
+//
+Point_t** arr_copy(Point_t** arr, int exclude_index);
+// Освобождение памяти из под массива точек.
+void arr_free(Point_t** ptr, int length);
+
 // Вывести координаты точки в stdout.
 int printPoint(Point_t p);
 //
 void printStack(Point_t* ptr, const int length, const char* name);
 //
 void printArray(Point_t** ptr, const int length, const char* name);
-// Инициализация (выделение памяти) для массива точек.
-Point_t** arr_init(int length);
 //
 int arr_findPoint(Point_t** arr, Point_t point, int length);
-// Освобождение памяти из под массива точек.
-void arr_free(Point_t** ptr, int length);
+//
+int stk_findPoint(Point_t* arr, Point_t point, int length);
+
+//
+Point_t** input();
+//
+void output(Point_t** arr, Point_t* curve);
+
+// Вычисление z-компоненты векторного произведения векторов ab и bc.
+// Если возвращаемое значение > 0, то точка с находится слева от вектора ab.
+// Если возвращаемое значение < 0, то точка с находится справа от вектора ab.
+// Если возвращаемое значение = 0, то точка с находится на одной линии с
+// вектором ab.
+int rotate(Point_t* a, const Point_t* b, const Point_t* c);
 // Функция-обертка rotate() для qsort.
 // Использутся глобальная переменная Point lower_left.
 int Point_compare(const void* p1, const void* p2);
 // Алгоритм Грэхема.
 // Использутся глобальная переменная Point lower_left.
-Point_t* graham_algorithm(Point_t** arr, const int length);
+Point_t* graham_algorithm(Point_t** arr);
 //
 Point_t* jarvis_algorithm(Point_t** arr, const int length);
 
 Point_t* chen_algorithm(Point_t** arr, const int length);
-
+//
+void curve_compare();
 
 #endif

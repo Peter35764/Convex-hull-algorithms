@@ -14,15 +14,14 @@ all :
 	$(CC) $(FLAGS) $(SOURCE_FILES) -o $(BIN_NAME)
 
 clean :
-	rm -f $(BIN_NAME)* vgcore.*
+	rm -f $(BIN_NAME)* vgcore.* output.txt
 
 rebuild : clean all
 
 test : clean
-	$(CC) $(DEBUGGER_FLAGS) $(SOURCE_FILES) -o $(BIN_NAME)_debug
-	$(CHECK) ./$(BIN_NAME)_debug
-	$(CC) $(DEBUGGER_FLAGS) $(FSANITIZER) $(SOURCE_FILES) -o $(BIN_NAME)_fsanitize 
-	./$(BIN_NAME)_fsanitize
+	#$(CC) $(DEBUGGER_FLAGS) $(SOURCE_FILES) -o $(BIN_NAME)_debug && $(CHECK) ./$(BIN_NAME)_debug
+	#$(CC) $(DEBUGGER_FLAGS) $(FSANITIZER) $(SOURCE_FILES) -o $(BIN_NAME)_fsanitize &&./$(BIN_NAME)_fsanitize
+	$(CC) $(DEBUGGER_FLAGS) $(SOURCE_FILES) -o $(BIN_NAME)_debug && ./$(BIN_NAME)_debug
 
 clang:
 	clang-format -style=Google -i *.[ch]

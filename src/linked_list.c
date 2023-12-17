@@ -53,7 +53,7 @@ void list_free(Node_t *head) {
 }
 
 void printList(Node_t *head, const char *name) {
-  printf("\n=== List %s ===\n", name);
+  printf("\n=== %s ===\n", name);
   if (head == NULL) {
     printf(" ```empty```\n");
   } else {
@@ -64,11 +64,18 @@ void printList(Node_t *head, const char *name) {
       current = current->next;
     }
   }
-  printf("============\n");
+  printf("=== list ===\n");
 }
 
 int get_last(Node_t *head) {
   while (head->next != NULL) {
+    head = head->next;
+  }
+  return head->value;
+}
+
+int get_penultimate(Node_t *head) {
+  while (head->next->next != NULL) {
     head = head->next;
   }
   return head->value;
