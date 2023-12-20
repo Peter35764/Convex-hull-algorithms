@@ -1,9 +1,6 @@
 #ifndef CW_ACT_LINKED_LIST_H
 #define CW_ACT_LINKED_LIST_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct Node {
   unsigned int value;
   struct Node* next;

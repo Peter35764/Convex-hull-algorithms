@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "linked_list.h"
 
 Node_t *list_init(unsigned int value, unsigned int flag) {
