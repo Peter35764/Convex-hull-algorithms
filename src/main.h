@@ -1,6 +1,8 @@
 #ifndef CW_ACT_MAIN_H
 #define CW_ACT_MAIN_H
 
+#include "linked_list/linked_list.h"
+
 // Универсальные макросы "стека" для массива точек (Point_t** или Point_t*).
 #define push(stack_ptr, element) (*((stack_ptr)++) = (element))
 #define pop(stack_ptr) (--(stack_ptr))  // (*(stack_ptr)--)
@@ -19,12 +21,12 @@ typedef struct Point {
 
 // Алгоритм Грэхема.
 // Использутся глобальная переменная Point lower_left.
-Point_t* graham_algorithm(Point_t** arr);
+Node_t* graham_algorithm(Point_t** arr, int length);
 // Алгоритм Джарвиса.
 // Использутся глобальная переменная Point lower_left.
-Point_t* jarvis_algorithm(Point_t** arr);
+Node_t* jarvis_algorithm(Point_t** arr, int length);
 // TODO
-Point_t* chen_algorithm(Point_t** arr);
+Node_t* chan_algorithm(Point_t** arr, int length);
 // TODO
 void hull_compare();
 // Вычисление z-компоненты векторного произведения векторов ab и bc.
@@ -49,11 +51,11 @@ void arr_free(Point_t** ptr, int length);
 
 
 // Вывести координаты точки в stdout.
-int printPoint(Point_t p);
+void printPoint(Point_t p);
 //
-void printStack(Point_t* ptr, const int length, const char* name);
+void printStack(Point_t* ptr,  int length, const char* name);
 //
-void printArray(Point_t** ptr, const int length, const char* name);
+void printArray(Point_t** ptr,  int length, const char* name);
 //
 int arr_findPoint(Point_t** arr, Point_t point, int length);
 //
@@ -62,6 +64,8 @@ int stk_findPoint(Point_t* arr, Point_t point, int length);
 // TODO
 Point_t** input();
 // Представление полученной оболочки в виде набора символов в текстовом файле.
-void output(Point_t** arr, Point_t* curve);
+void output(Point_t** arr, Point_t* hull, int hull_length);
+// Функция преобразования упорядоченного связного списка точек к массиву для передачи в функции печати и вывода в файл.
+Point_t* to_output_stack(Point_t** arr, Node_t* hull);
 
 #endif

@@ -6,7 +6,7 @@ CHECK = 2>&1 valgrind --tool=memcheck --leak-check=full --track-origins=yes --sh
 SOURCE_FILES = main.c linked_list/linked_list.c
 
 BIN_NAME := conv-hull
-.DEFAULT_GOAL := test
+#.DEFAULT_GOAL := test
 
 .PHONY: all clean rebuild test clang clang_n
 
@@ -19,8 +19,8 @@ clean :
 rebuild : clean all
 
 test : clean
-	$(CC) $(DEBUGGER_FLAGS) $(SOURCE_FILES) -o $(BIN_NAME)_debug && $(CHECK) ./$(BIN_NAME)_debug
-	$(CC) $(DEBUGGER_FLAGS) $(FSANITIZER) $(SOURCE_FILES) -o $(BIN_NAME)_fsanitize &&./$(BIN_NAME)_fsanitize
+	$(CC) $(DEBUGGER_FLAGS) $(SOURCE_FILES) -o $(BIN_NAME)_debug && $(CHECK) ./$(BIN_NAME)_debug | grep "ERROR SUMMARY"
+	$(CC) $(DEBUGGER_FLAGS) $(FSANITIZER) $(SOURCE_FILES) -o $(BIN_NAME)_fsanitize && ./$(BIN_NAME)_fsanitize 
 
 clang:
 	clang-format -style=Google -i *.[ch]
