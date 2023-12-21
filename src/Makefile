@@ -14,7 +14,7 @@ all :
 	$(CC) $(FLAGS) $(SOURCE_FILES) -o $(BIN_NAME)
 
 clean :
-	rm -f $(BIN_NAME)* vgcore.* output.txt ../output/*
+	rm -f $(BIN_NAME)* ../output/* vgcore.*
 
 rebuild : clean all
 
