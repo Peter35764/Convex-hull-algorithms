@@ -3,22 +3,30 @@
 
 #include "linked_list.h"
 
-Node_t *list_init(unsigned int value, unsigned int flag) {
+Node_t *list_init(unsigned int value, Point_t** arr __attribute__((unused)), unsigned int flag) {
   Node_t *head = (Node_t *)calloc(1, sizeof(Node_t));
 
   if (!head) {
-    perror("ERROR in list_init()");
+    perror("\nERROR in list_init()\n\n");
     exit(1);
   }
 
   if (flag == 0) {
     head->value = value;
     head->next = NULL;
-  } else {
+  } else if (flag == 1){
     head->value = 0;
-    for (unsigned int i = 1; i < value; i++) {
+    for (size_t i = 1; i < value; i++) {
       append(&head, i);
     }
+  } else if (flag == 2) {
+    head->value = arr[0]->index;
+    for (size_t i = 1; i < value; i++) {
+      append(&head, arr[i]->index);
+    }
+  } else {
+    fprintf(stderr, "\nERROR in list_init: incorrect flag\n\n");
+    exit(1);
   }
   return head;
 }
@@ -85,18 +93,21 @@ int get_penultimate(Node_t *head) {
 }
 
 int get_index(Node_t *head, unsigned int value) {
+  int index = 0;
   while (value != head->value) {
     if (head->next == NULL) {
-      fprintf(stderr, "ERROR in get_value()\n  No such value.\n");
+      fprintf(stderr, "ERROR in get_index()\n  No such value.\n");
       exit(1);
     }
+    index++;
     head = head->next;
   }
-  return head->value;
+  return index;
 }
 
 int get_value(Node_t *head, unsigned int index) {
-  for (unsigned int i = 0; i < index; i++) {
+  if (index != 0) {
+  for (size_t i = 0; i < index; i++) {
     if (head->next == NULL) {
       fprintf(stderr, "ERROR in get_value()\n");
       exit(1);
@@ -105,12 +116,13 @@ int get_value(Node_t *head, unsigned int index) {
   } /*        tmp           i-1
               head          i
               head->next    i+1        */
+  }
   return head->value;
 }
 
 int get_length(Node_t *head) {
-  int ans = 0;
-  while (head != NULL) {
+  int ans = 0; // = 
+  while (head!= NULL) { //   while (head != NULL) { // 
     ans++;
     head = head->next;
   }
@@ -118,7 +130,7 @@ int get_length(Node_t *head) {
 }
 
 void change_value(Node_t *head, unsigned int index, unsigned int value) {
-  for (unsigned int i = 0; i < index; i++) {
+  for (size_t i = 0; i < index; i++) {
     if (head->next == NULL) {
       fprintf(stderr, "ERROR in change_value()\n");
       exit(1);

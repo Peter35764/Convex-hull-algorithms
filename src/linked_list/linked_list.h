@@ -6,6 +6,10 @@ typedef struct Node {
   struct Node* next;
 } Node_t;
 
+typedef struct Point {
+  int x, y, index;
+} Point_t;
+
 // !!! В библиотеке нет контроля за поступающими указателями на списки. !!!
 //   !!!     Все функции возвращают только положительные значения.    !!!
 
@@ -16,7 +20,7 @@ typedef struct Node {
 // Инициализация первой ноды.
 // flag == 0 - создать одну ноду со значением равным value.
 // flag == 1 - создать список нод в количестве value.
-Node_t* list_init(unsigned int value, unsigned int flag);
+Node_t *list_init(unsigned int value, Point_t** arr __attribute__((unused)), unsigned int flag);
 // Добавить элемент в конец списка.
 void append(Node_t** head, unsigned int value);
 // Освобождение памяти от всех нод списка.
